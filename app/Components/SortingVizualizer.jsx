@@ -22,7 +22,7 @@ const SortingVizualizer = () => {
     const screenWidth = window.innerWidth;
     if (screenWidth < 640) {
       // Mobile
-      return Math.min(80, Math.floor(screenWidth / 4)+100);
+      return Math.min(80, Math.floor(screenWidth / 4)+80);
     } else if (screenWidth < 1024) {
       // Tablet
       return Math.min(150, Math.floor(screenWidth / 5));
@@ -397,7 +397,7 @@ const SortingVizualizer = () => {
                     <input
                       type="range"
                       min="10"
-                      max={isMobile ? 180 : 300}
+                      max={isMobile ? 160 : 300}
                       value={arraySize}
                       onChange={(e) => setArraySize(parseInt(e.target.value))}
                       disabled={isAnimating}
@@ -863,7 +863,7 @@ const SortingVizualizer = () => {
 
               {/* Fun Facts - Hidden on small screens */}
               <div
-                className={`p-3 rounded-lg border transition-all duration-300 hidden sm:block ${
+                className={`p-3 rounded-lg border transition-all duration-300 ${
                   selectedAlgorithm === "merge"
                     ? "from-purple-50 to-purple-100 border border-purple-200"
                     : selectedAlgorithm === "quick"
@@ -959,7 +959,7 @@ const SortingVizualizer = () => {
               </div>
 
               {/* Algorithm Characteristics */}
-              <div className="mt-4 pt-4 border-t border-zink-100 hidden sm:block">
+              <div className="mt-4 pt-4 border-t border-zink-100">
                 <h3 className="text-xs font-semibold text-zink-50 mb-2 uppercase tracking-wide">
                   Characteristics
                 </h3>
