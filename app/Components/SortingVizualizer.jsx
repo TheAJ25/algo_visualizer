@@ -2,25 +2,48 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import * as SortingAlgorithms from "./SortingAlgorithms.jsx";
+import { useMediaQuery } from "react-responsive";
 
 const SortingVizualizer = () => {
   const [array, setArray] = useState([]);
   const [isAnimating, setIsAnimating] = useState(false);
   const [colorStates, setColorStates] = useState([]);
   const [animationSpeed, setAnimationSpeed] = useState(50); // milliseconds
-  const [arraySize, setArraySize] = useState(100); // number of bars
   const [selectedAlgorithm, setSelectedAlgorithm] = useState("merge");
+  const [showInfo, setShowInfo] = useState(false);
+
+  // Check if the screen is mobile size
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+
+  // Calculate responsive array size based on screen width
+  const getResponsiveArraySize = () => {
+    if (typeof window === "undefined") return 180; // Default for SSR
+
+    const screenWidth = window.innerWidth;
+    if (screenWidth < 640) {
+      // Mobile
+      return Math.min(80, Math.floor(screenWidth / 4)+100);
+    } else if (screenWidth < 1024) {
+      // Tablet
+      return Math.min(150, Math.floor(screenWidth / 5));
+    } else {
+      // Desktop
+      return Math.min(300, Math.floor(screenWidth / 6));
+    }
+  };
+
+  const [arraySize, setArraySize] = useState(getResponsiveArraySize()); // number of bars
 
   // Color constants - high contrast colors visible on both black and white backgrounds
   const COLORS = {
-    DEFAULT: "#6B46C1", // Purple
-    COMPARING: "#DC2625", // Red
-    SELECTED: "#FFFF00", // Yellow
-    OVERWRITE: "#EF4444", // Red for overwrites
-    SORTED_SUB: "#0891B2", // Cyan
-    FINAL_SORTED: "#16A34A", // Green
-    PIVOT: "#F97316", // Orange for pivot
-    BUCKET_HIGHLIGHT: "#22C55E", // Green for bucket/digit highlight
+    DEFAULT: "#D4D4D8", // Zink
+    COMPARING: "#FF2700", // Red
+    SELECTED: "#FFF700", // Yellow
+    OVERWRITE: "#00F2FF", // Aqua
+    SORTED_SUB: "#9000FF", // Purple
+    FINAL_SORTED: "#9AE600", // Lime Green
+    PIVOT: "#FF00E6", // Pink for pivot
+    BUCKET_HIGHLIGHT: "#0800FF", // Blue for bucket/digit highlight
   };
 
   // Algorithm information
@@ -146,6 +169,16 @@ const SortingVizualizer = () => {
         "Array [12, 34, 54, 2, 3] → Sort with gap (e.g., 2) → [2, 3, 54, 12, 34] → Sort with gap 1 (Insertion Sort) → Final sorted array",
     },
   };
+
+  useEffect(() => {
+    // Update array size when window is resized
+    const handleResize = () => {
+      setArraySize(getResponsiveArraySize());
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     resetArray();
@@ -314,28 +347,27 @@ const SortingVizualizer = () => {
   const currentAlgorithm = algorithmInfo[selectedAlgorithm];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6 font-sans">
+    <div className="min-h-screen bg-black p-3 sm:p-6 font-sans">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-4xl font-bold text-zink-50 mb-2">
             Sorting Algorithm Visualizer
           </h1>
-          <p className="text-gray-600">
+          <p className="text-sm sm:text-base text-zink-300">
             Watch how different sorting algorithms work step by step
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="space-y-6 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-6">
           {/* Main Visualization Panel */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-lg p-6">
+            <div className="bg-slate-800 rounded-xl shadow-lg p-3 sm:p-6">
               {/* Control Panel */}
-              <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                <div className="flex flex-wrap gap-6 items-center justify-center">
-                  {/* Speed Control */}
-                  <div className="flex flex-col items-center min-w-0">
-                    <label className="text-sm font-semibold mb-2 text-gray-700">
+              <div className="bg-stone-950 rounded-lg p-3 md:p-4 mb-4 md:mb-6">
+                <div className="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-6 items-center justify-center">
+                  <div className="flex flex-col items-center w-full sm:w-auto">
+                    <label className="text-xs md:text-sm font-semibold mb-1 md:mb-2 text-zink-100">
                       Animation Speed
                     </label>
                     <input
@@ -347,9 +379,9 @@ const SortingVizualizer = () => {
                         setAnimationSpeed(201 - parseInt(e.target.value))
                       }
                       disabled={isAnimating}
-                      className="w-24 sm:w-32 accent-blue-500"
+                      className="w-full sm:w-24 md:w-32 accent-lime-400"
                     />
-                    <span className="text-xs mt-1 text-gray-500">
+                    <span className="text-xs mt-1 text-zink-700">
                       {animationSpeed <= 20
                         ? "Fast"
                         : animationSpeed <= 100
@@ -358,55 +390,65 @@ const SortingVizualizer = () => {
                     </span>
                   </div>
 
-                  {/* Array Size Control */}
-                  <div className="flex flex-col items-center min-w-0">
-                    <label className="text-sm font-semibold mb-2 text-gray-700">
+                  <div className="flex flex-col items-center w-full sm:w-auto">
+                    <label className="text-xs md:text-sm font-semibold mb-1 md:mb-2 text-zink-100">
                       Array Size
                     </label>
                     <input
                       type="range"
                       min="10"
-                      max="300"
+                      max={isMobile ? 180 : 300}
                       value={arraySize}
                       onChange={(e) => setArraySize(parseInt(e.target.value))}
                       disabled={isAnimating}
-                      className="w-24 sm:w-32 accent-blue-500"
+                      className="w-full sm:w-24 md:w-32 accent-lime-400"
                     />
-                    <span className="text-xs mt-1 text-gray-500">
+                    <span className="text-xs mt-1 text-zink-700">
                       {arraySize} bars
                     </span>
                   </div>
 
-                  {/* Generate New Array Button */}
-                  <button
-                    onClick={resetArray}
-                    disabled={isAnimating}
-                    className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                      isAnimating
-                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        : "bg-blue-500 text-white hover:bg-blue-600 shadow-md transform hover:scale-105"
-                    }`}
-                  >
-                    🔄 New Array
-                  </button>
+                  <div className="flex flex-row gap-4 lg:gap-6 md:gap-3 w-full sm:w-auto justify-center">
+                    <button
+                      onClick={resetArray}
+                      disabled={isAnimating}
+                      className={`px-3 py-2 text-sm md:px-4 md:py-2 md:text-base rounded-lg font-medium transition-all ${
+                        isAnimating
+                          ? "bg-gray-800 text-gray-500 cursor-not-allowed"
+                          : "bg-black text-lime-400 border-2 border-lime-400 hover:bg-lime-400 hover:text-black transform hover:scale-105"
+                      }`}
+                    >
+                      🔄 New
+                    </button>
+                    <button
+                      onClick={handleSort}
+                      disabled={isAnimating}
+                      className={`px-3 py-2 text-sm md:px-4 md:py-2 md:text-base rounded-lg font-medium transition-all ${
+                        isAnimating
+                          ? "bg-gray-800 text-gray-500 cursor-not-allowed"
+                          : "bg-lime-400 text-black hover:bg-lime-500 transform hover:scale-105"
+                      }`}
+                    >
+                      {isAnimating ? "⏳" : "🚀 Sort"}
+                    </button>
 
-                  {/* Sort Button */}
-                  <button
-                    onClick={handleSort}
-                    disabled={isAnimating}
-                    className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                      isAnimating
-                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        : "bg-green-500 text-white hover:bg-green-600 shadow-md transform hover:scale-105"
-                    }`}
-                  >
-                    {isAnimating ? "⏳ Sorting..." : "🚀 Sort"}
-                  </button>
+                    {/* Mobile Info Toggle */}
+                    <button
+                      onClick={() => setShowInfo(!showInfo)}
+                      className={`lg:hidden px-3 py-2 text-sm md:px-4 md:py-2 md:text-base rounded-lg font-medium transition-all ${
+                        isAnimating
+                          ? "bg-gray-800 text-gray-500 cursor-not-allowed"
+                          : "bg-black text-lime-400 border-2 border-lime-400 hover:bg-lime-400 hover:text-black transform hover:scale-105"
+                      }`}
+                    >
+                      {showInfo ? "Hide Info" : "Show Info"}
+                    </button>
+                  </div>
                 </div>
               </div>
 
               {/* Array Visualization */}
-              <div className="bg-gray-900 rounded-lg p-4 mb-6 overflow-hidden">
+              <div className="bg-stone-950 rounded-lg p-2 sm:p-4 mb-4 sm:mb-6 overflow-hidden">
                 <div
                   className="array-container flex items-end justify-center"
                   style={{ height: "400px" }}
@@ -417,7 +459,12 @@ const SortingVizualizer = () => {
                       className="array-bar transition-all duration-300 ease-in-out"
                       style={{
                         height: `${Math.max(10, (value / 730) * 360)}px`,
-                        width: `${Math.max(1, Math.floor(800 / arraySize))}px`,
+                        width: `${Math.max(
+                          1,
+                          Math.floor(
+                            (window.innerWidth < 640 ? 300 : 800) / arraySize
+                          )
+                        )}px`,
                         backgroundColor: colorStates[idx] || COLORS.DEFAULT,
                         margin: `0 ${arraySize <= 50 ? "2px" : "1px"}`,
                         borderRadius: arraySize <= 50 ? "2px" : "1px",
@@ -427,168 +474,180 @@ const SortingVizualizer = () => {
                 </div>
               </div>
 
-              {/* Algorithm Buttons */}
-              <div className="flex flex-wrap gap-3 justify-center">
+              {/* Algorithm Buttons - Grid layout for mobile */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 mb-4 sm:mb-0">
                 <button
-                  className={`px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105 ${
+                  className={`px-2 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition-all transform hover:scale-105 ${
                     selectedAlgorithm === "merge"
                       ? "bg-purple-600 text-white shadow-lg"
                       : isAnimating
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-white text-gray-700 border-2 border-purple-600 hover:bg-purple-50 shadow-md"
+                      : "bg-stone-950 text-zink-300 border-2 border-purple-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
                   }`}
                   onClick={() => handleAlgorithmSelect("merge")}
                   disabled={isAnimating}
                 >
-                  🔀 Merge Sort
+                  <span className="hidden sm:inline">🔀 </span>Merge
                 </button>
 
                 <button
-                  className={`px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105 ${
+                  className={`px-2 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition-all transform hover:scale-105 ${
                     selectedAlgorithm === "quick"
                       ? "bg-red-600 text-white shadow-lg"
                       : isAnimating
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-white text-gray-700 border-2 border-red-600 hover:bg-red-50 shadow-md"
+                      : "bg-stone-950 text-zink-300 border-2 border-red-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
                   }`}
                   onClick={() => handleAlgorithmSelect("quick")}
                   disabled={isAnimating}
                 >
-                  ⚡ Quick Sort
+                  <span className="hidden sm:inline">⚡ </span>Quick
                 </button>
 
                 <button
-                  className={`px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105 ${
+                  className={`px-2 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition-all transform hover:scale-105 ${
                     selectedAlgorithm === "heap"
                       ? "bg-cyan-600 text-white shadow-lg"
                       : isAnimating
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-white text-gray-700 border-2 border-cyan-600 hover:bg-cyan-50 shadow-md"
+                      : "bg-stone-950 text-zink-300 border-2 border-cyan-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
                   }`}
                   onClick={() => handleAlgorithmSelect("heap")}
                   disabled={isAnimating}
                 >
-                  🏔️ Heap Sort
+                  <span className="hidden sm:inline">🏔️ </span>Heap
                 </button>
 
                 <button
-                  className={`px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105 ${
+                  className={`px-2 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition-all transform hover:scale-105 ${
                     selectedAlgorithm === "bubble"
                       ? "bg-orange-600 text-white shadow-lg"
                       : isAnimating
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-white text-gray-700 border-2 border-orange-600 hover:bg-orange-50 shadow-md"
+                      : "bg-stone-950 text-zink-300 border-2 border-orange-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
                   }`}
                   onClick={() => handleAlgorithmSelect("bubble")}
                   disabled={isAnimating}
                 >
-                  🫧 Bubble Sort
+                  <span className="hidden sm:inline">🫧 </span>Bubble
                 </button>
 
                 <button
-                  className={`px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105 ${
+                  className={`px-2 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition-all transform hover:scale-105 ${
                     selectedAlgorithm === "insertion"
                       ? "bg-teal-600 text-white shadow-lg"
                       : isAnimating
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-white text-gray-700 border-2 border-teal-600 hover:bg-teal-50 shadow-md"
+                      : "bg-stone-950 text-zink-300 border-2 border-teal-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
                   }`}
                   onClick={() => handleAlgorithmSelect("insertion")}
                   disabled={isAnimating}
                 >
-                  📥 Insertion Sort
+                  <span className="hidden sm:inline">📥 </span>Insertion
                 </button>
 
                 <button
-                  className={`px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105 ${
+                  className={`px-2 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition-all transform hover:scale-105 ${
                     selectedAlgorithm === "selection"
                       ? "bg-emerald-600 text-white shadow-lg"
                       : isAnimating
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-white text-gray-700 border-2 border-emerald-600 hover:bg-emerald-50 shadow-md"
+                      : "bg-stone-950 text-zink-300 border-2 border-emerald-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
                   }`}
                   onClick={() => handleAlgorithmSelect("selection")}
                   disabled={isAnimating}
                 >
-                  🔍 Selection Sort
+                  <span className="hidden sm:inline">🔍 </span>Selection
                 </button>
 
                 <button
-                  className={`px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105 ${
+                  className={`px-2 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition-all transform hover:scale-105 ${
                     selectedAlgorithm === "radix"
                       ? "bg-lime-600 text-white shadow-lg"
                       : isAnimating
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-white text-gray-700 border-2 border-lime-600 hover:bg-lime-50 shadow-md"
+                      : "bg-stone-950 text-zink-300 border-2 border-lime-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
                   }`}
                   onClick={() => handleAlgorithmSelect("radix")}
                   disabled={isAnimating}
                 >
-                  🔢 Radix Sort
+                  <span className="hidden sm:inline">🔢 </span>Radix
                 </button>
 
                 <button
-                  className={`px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105 ${
+                  className={`px-2 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition-all transform hover:scale-105 ${
                     selectedAlgorithm === "shell"
                       ? "bg-sky-600 text-white shadow-lg"
                       : isAnimating
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-white text-gray-700 border-2 border-sky-600 hover:bg-sky-50 shadow-md"
+                      : "bg-stone-950 text-zink-300 border-2 border-sky-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
                   }`}
                   onClick={() => handleAlgorithmSelect("shell")}
                   disabled={isAnimating}
                 >
-                  🐚 Shell Sort
+                  <span className="hidden sm:inline">🐚 </span>Shell
                 </button>
               </div>
 
-              {/* Color Legend */}
-              <div className="mt-6 bg-gray-50 rounded-lg p-4">
-                <h3 className="text-sm font-semibold text-gray-700 mb-3 text-center">
+              {/* Color Legend - Horizontal scroll on mobile */}
+              <div className="bg-stone-950 rounded-lg p-3 sm:p-4 mt-4 sm:mt-6">
+                <h3 className="text-sm font-semibold text-zink-200 mb-3 text-center">
                   Color Legend
                 </h3>
-                <div className="flex flex-wrap gap-4 justify-center text-sm">
-                  <div className="flex items-center gap-2">
+                <div className="flex overflow-x-auto pb-2 sm:pb-0 sm:flex-wrap gap-3 sm:gap-4 justify-start sm:justify-center text-sm">
+                  <div className="flex items-center gap-2 flex-shrink-0">
                     <div
-                      className="w-4 h-4 rounded border-2 border-gray-300"
+                      className="w-4 h-4 rounded border-2 border-gray-50"
                       style={{ backgroundColor: COLORS.DEFAULT }}
                     ></div>
-                    <span className="text-gray-600">Unsorted</span>
+                    <span className="text-zink-300 whitespace-nowrap">
+                      Unsorted
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-shrink-0">
                     <div
-                      className="w-4 h-4 rounded border-2 border-gray-300"
+                      className="w-4 h-4 rounded border-2 border-gray-50"
                       style={{ backgroundColor: COLORS.COMPARING }}
                     ></div>
-                    <span className="text-gray-600">Comparing</span>
+                    <span className="text-zink-300 whitespace-nowrap">
+                      Comparing
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-shrink-0">
                     <div
-                      className="w-4 h-4 rounded border-2 border-gray-300"
+                      className="w-4 h-4 rounded border-2 border-gray-50"
                       style={{ backgroundColor: COLORS.SELECTED }}
                     ></div>
-                    <span className="text-gray-600">Selected</span>
+                    <span className="text-zink-300 whitespace-nowrap">
+                      Selected
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-shrink-0">
                     <div
-                      className="w-4 h-4 rounded border-2 border-gray-300"
+                      className="w-4 h-4 rounded border-2 border-gray-50"
                       style={{ backgroundColor: COLORS.PIVOT }}
                     ></div>
-                    <span className="text-gray-600">Pivot</span>
+                    <span className="text-zink-300 whitespace-nowrap">
+                      Pivot
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-shrink-0">
                     <div
-                      className="w-4 h-4 rounded border-2 border-gray-300"
+                      className="w-4 h-4 rounded border-2 border-gray-50"
                       style={{ backgroundColor: COLORS.SORTED_SUB }}
                     ></div>
-                    <span className="text-gray-600">Sub-array</span>
+                    <span className="text-zink-300 whitespace-nowrap">
+                      Sub-array
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-shrink-0">
                     <div
-                      className="w-4 h-4 rounded border-2 border-gray-300"
+                      className="w-4 h-4 rounded border-2 border-gray-50"
                       style={{ backgroundColor: COLORS.FINAL_SORTED }}
                     ></div>
-                    <span className="text-gray-600">Sorted</span>
+                    <span className="text-zink-300 whitespace-nowrap">
+                      Sorted
+                    </span>
                   </div>
                 </div>
               </div>
@@ -596,11 +655,15 @@ const SortingVizualizer = () => {
           </div>
 
           {/* Algorithm Information Panel */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-lg p-6 sticky top-6 border border-gray-100">
+          <div
+            className={`lg:col-span-1 ${
+              showInfo ? "block" : "hidden lg:block"
+            }`}
+          >
+            <div className="bg-slate-800 rounded-xl shadow-lg p-4 sm:p-6 lg:sticky lg:top-6">
               {/* Header with gradient background */}
               <div
-                className={`rounded-lg p-4 mb-6 -mt-2 -mx-2 bg-gradient-to-r ${
+                className={`rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 -mt-2 -mx-2 bg-gradient-to-r ${
                   selectedAlgorithm === "merge"
                     ? "from-purple-500 to-purple-600"
                     : selectedAlgorithm === "quick"
@@ -619,7 +682,7 @@ const SortingVizualizer = () => {
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                  <h2 className="text-lg sm:text-2xl font-bold text-white flex items-center gap-2">
                     {selectedAlgorithm === "merge"
                       ? "🔀"
                       : selectedAlgorithm === "quick"
@@ -635,13 +698,18 @@ const SortingVizualizer = () => {
                       : selectedAlgorithm === "radix"
                       ? "🔢"
                       : "🐚"}
-                    {currentAlgorithm.name}
+                    <span className="hidden sm:inline">
+                      {currentAlgorithm.name}
+                    </span>
+                    <span className="sm:hidden">
+                      {currentAlgorithm.name.split(" ")[0]}
+                    </span>
                   </h2>
                 </div>
               </div>
 
               {/* Description */}
-              <div className="mb-6">
+              <div className="mb-4 sm:mb-6">
                 <div className="flex items-center gap-2 mb-3">
                   <div
                     className={`w-1 h-5 rounded-full ${
@@ -662,23 +730,22 @@ const SortingVizualizer = () => {
                         : "bg-sky-500"
                     }`}
                   ></div>
-                  <h3 className="text-sm font-semibold text-gray-700">
+                  <h3 className="text-sm font-semibold text-zink-50">
                     How It Works
                   </h3>
                 </div>
-                <p className="text-gray-600 text-sm leading-relaxed bg-gray-50 p-3 rounded-lg">
+                <p className="text-zink-150 text-xs sm:text-sm leading-relaxed bg-stone-950 p-3 rounded-lg">
                   {currentAlgorithm.description}
                 </p>
               </div>
 
               {/* Complexity Cards */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                {/* Time Complexity */}
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-100">
-                  <div className="flex items-center gap-2 mb-2">
+              <div className="grid grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-6">
+                <div className="bg-black p-3 md:p-4 rounded-xl border border-gray-700">
+                  <div className="flex items-center gap-1 md:gap-2 mb-1 md:mb-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-blue-600"
+                      className="h-3 w-3 md:h-4 md:w-4 text-lime-400"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -690,38 +757,36 @@ const SortingVizualizer = () => {
                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    <h3 className="text-xs font-semibold text-blue-800 uppercase tracking-wide">
+                    <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
                       Time
                     </h3>
                   </div>
                   <div className="space-y-1">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs text-blue-700">Best:</span>
-                      <code className="text-xs font-mono bg-blue-200 bg-opacity-50 px-1.5 py-0.5 rounded text-blue-900">
+                      <span className="text-xs text-gray-400">Best:</span>
+                      <code className="text-xs font-mono bg-gray-800 px-1 py-0.5 rounded text-lime-400">
                         {currentAlgorithm.timeComplexity.best}
                       </code>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-xs text-blue-700">Average:</span>
-                      <code className="text-xs font-mono bg-blue-200 bg-opacity-50 px-1.5 py-0.5 rounded text-blue-900">
+                      <span className="text-xs text-gray-400">Average:</span>
+                      <code className="text-xs font-mono bg-gray-800 px-1 py-0.5 rounded text-lime-400">
                         {currentAlgorithm.timeComplexity.average}
                       </code>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-xs text-blue-700">Worst:</span>
-                      <code className="text-xs font-mono bg-blue-200 bg-opacity-50 px-1.5 py-0.5 rounded text-blue-900">
+                      <span className="text-xs text-gray-400">Worst:</span>
+                      <code className="text-xs font-mono bg-gray-800 px-1 py-0.5 rounded text-lime-400">
                         {currentAlgorithm.timeComplexity.worst}
                       </code>
                     </div>
                   </div>
                 </div>
-
-                {/* Space Complexity */}
-                <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl border border-green-100">
-                  <div className="flex items-center gap-2 mb-2">
+                <div className="bg-black p-3 md:p-4 rounded-xl border border-gray-700">
+                  <div className="flex items-center gap-1 md:gap-2 mb-1 md:mb-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-green-600"
+                      className="h-3 w-3 md:h-4 md:w-4 text-lime-400"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -733,12 +798,12 @@ const SortingVizualizer = () => {
                         d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
                       />
                     </svg>
-                    <h3 className="text-xs font-semibold text-green-800 uppercase tracking-wide">
+                    <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
                       Space
                     </h3>
                   </div>
-                  <div className="flex items-center justify-center h-8">
-                    <code className="text-sm font-mono bg-green-200 bg-opacity-50 px-2 py-1 rounded text-green-900">
+                  <div className="flex items-center justify-center h-12">
+                    <code className="text-xs md:text-sm font-mono bg-gray-800 px-1.5 md:px-2 py-0.5 md:py-1 rounded text-lime-400">
                       {currentAlgorithm.spaceComplexity}
                     </code>
                   </div>
@@ -746,8 +811,8 @@ const SortingVizualizer = () => {
               </div>
 
               {/* Example */}
-              <div className="mb-6">
-                <div className="flex items-center gap-2 mb-3">
+              <div className="mb-4 sm:mb-6">
+                <div className="flex items-center gap-2 mb-2 sm:mb-3">
                   <div
                     className={`w-1 h-5 rounded-full ${
                       selectedAlgorithm === "merge"
@@ -767,16 +832,16 @@ const SortingVizualizer = () => {
                         : "bg-sky-500"
                     }`}
                   ></div>
-                  <h3 className="text-sm font-semibold text-gray-700">
+                  <h3 className="text-sm font-semibold text-zink-50">
                     Step-by-Step Example
                   </h3>
                 </div>
-                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <div className="bg-stone-950 p-3 rounded-lg">
                   <div className="flex items-start">
                     <div className="flex-shrink-0 mt-0.5">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 text-gray-400"
+                        className="h-4 w-4 text-zink-100"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -789,16 +854,16 @@ const SortingVizualizer = () => {
                         />
                       </svg>
                     </div>
-                    <p className="text-xs text-gray-600 leading-relaxed ml-2">
+                    <p className="text-xs text-zink-150 leading-relaxed ml-2">
                       {currentAlgorithm.example}
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Fun Facts */}
+              {/* Fun Facts - Hidden on small screens */}
               <div
-                className={`p-4 rounded-lg bg-gradient-to-r ${
+                className={`p-3 rounded-lg border transition-all duration-300 hidden sm:block ${
                   selectedAlgorithm === "merge"
                     ? "from-purple-50 to-purple-100 border border-purple-200"
                     : selectedAlgorithm === "quick"
@@ -868,10 +933,10 @@ const SortingVizualizer = () => {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-xs font-semibold text-gray-700 mb-1">
+                    <h3 className="text-xs font-semibold text-zink-50 mb-1">
                       Did You Know?
                     </h3>
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-zink-150">
                       {selectedAlgorithm === "merge" &&
                         "Merge sort was invented by John von Neumann in 1945 and is often used when stability is required!"}
                       {selectedAlgorithm === "quick" &&
@@ -894,8 +959,8 @@ const SortingVizualizer = () => {
               </div>
 
               {/* Algorithm Characteristics */}
-              <div className="mt-4 pt-4 border-t border-gray-200">
-                <h3 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
+              <div className="mt-4 pt-4 border-t border-zink-100 hidden sm:block">
+                <h3 className="text-xs font-semibold text-zink-50 mb-2 uppercase tracking-wide">
                   Characteristics
                 </h3>
                 <div className="grid grid-cols-2 gap-2">
@@ -939,7 +1004,7 @@ const SortingVizualizer = () => {
                         </svg>
                       )}
                     </div>
-                    <span className="text-xs text-gray-600">Stable</span>
+                    <span className="text-xs text-zink-200">Stable</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div
@@ -981,7 +1046,7 @@ const SortingVizualizer = () => {
                         </svg>
                       )}
                     </div>
-                    <span className="text-xs text-gray-600">In-Place</span>
+                    <span className="text-xs text-zink-200">In-Place</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div
@@ -1027,7 +1092,7 @@ const SortingVizualizer = () => {
                         </svg>
                       )}
                     </div>
-                    <span className="text-xs text-gray-600">
+                    <span className="text-xs text-zink-200">
                       Guaranteed O(n log n)
                     </span>
                   </div>
@@ -1071,7 +1136,7 @@ const SortingVizualizer = () => {
                         </svg>
                       )}
                     </div>
-                    <span className="text-xs text-gray-600">
+                    <span className="text-xs text-zink-200">
                       Comparison-free
                     </span>
                   </div>
