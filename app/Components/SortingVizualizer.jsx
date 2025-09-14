@@ -734,7 +734,7 @@ const SortingVizualizer = () => {
                     How It Works
                   </h3>
                 </div>
-                <p className="text-zinc-150 text-xs sm:text-sm leading-relaxed bg-stone-950 p-3 rounded-lg">
+                <p className="text-zinc-100 text-xs sm:text-sm leading-relaxed bg-stone-950 p-3 rounded-lg">
                   {currentAlgorithm.description}
                 </p>
               </div>
@@ -854,7 +854,7 @@ const SortingVizualizer = () => {
                         />
                       </svg>
                     </div>
-                    <p className="text-xs text-zinc-150 leading-relaxed ml-2">
+                    <p className="text-xs text-zinc-100 leading-relaxed ml-2">
                       {currentAlgorithm.example}
                     </p>
                   </div>
@@ -936,7 +936,7 @@ const SortingVizualizer = () => {
                     <h3 className="text-xs font-semibold text-zinc-50 mb-1">
                       Did You Know?
                     </h3>
-                    <p className="text-xs text-zinc-150">
+                    <p className="text-xs text-zinc-200">
                       {selectedAlgorithm === "merge" &&
                         "Merge sort was invented by John von Neumann in 1945 and is often used when stability is required!"}
                       {selectedAlgorithm === "quick" &&
