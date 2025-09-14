@@ -36,7 +36,7 @@ const SortingVizualizer = () => {
 
   // Color constants - high contrast colors visible on both black and white backgrounds
   const COLORS = {
-    DEFAULT: "#D4D4D8", // Zink
+    DEFAULT: "#D4D4D8", // zinc
     COMPARING: "#FF2700", // Red
     SELECTED: "#FFF700", // Yellow
     OVERWRITE: "#00F2FF", // Aqua
@@ -170,15 +170,15 @@ const SortingVizualizer = () => {
     },
   };
 
-  useEffect(() => {
-    // Update array size when window is resized
-    const handleResize = () => {
-      setArraySize(getResponsiveArraySize());
-    };
+  // useEffect(() => {
+  //   // Update array size when window is resized
+  //   const handleResize = () => {
+  //     setArraySize(getResponsiveArraySize());
+  //   };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  //   window.addEventListener("resize", handleResize);
+  //   return () => window.removeEventListener("resize", handleResize);
+  // }, []);
 
   useEffect(() => {
     resetArray();
@@ -351,10 +351,10 @@ const SortingVizualizer = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-4xl font-bold text-zink-50 mb-2">
+          <h1 className="text-2xl sm:text-4xl font-bold text-zinc-50 mb-2">
             Sorting Algorithm Visualizer
           </h1>
-          <p className="text-sm sm:text-base text-zink-300">
+          <p className="text-sm sm:text-base text-zinc-300">
             Watch how different sorting algorithms work step by step
           </p>
         </div>
@@ -367,7 +367,7 @@ const SortingVizualizer = () => {
               <div className="bg-stone-950 rounded-lg p-3 md:p-4 mb-4 md:mb-6">
                 <div className="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-6 items-center justify-center">
                   <div className="flex flex-col items-center w-full sm:w-auto">
-                    <label className="text-xs md:text-sm font-semibold mb-1 md:mb-2 text-zink-100">
+                    <label className="text-xs md:text-sm font-semibold mb-1 md:mb-2 text-zinc-100">
                       Animation Speed
                     </label>
                     <input
@@ -381,7 +381,7 @@ const SortingVizualizer = () => {
                       disabled={isAnimating}
                       className="w-full sm:w-24 md:w-32 accent-lime-400"
                     />
-                    <span className="text-xs mt-1 text-zink-700">
+                    <span className="text-xs mt-1 text-zinc-300">
                       {animationSpeed <= 20
                         ? "Fast"
                         : animationSpeed <= 100
@@ -391,7 +391,7 @@ const SortingVizualizer = () => {
                   </div>
 
                   <div className="flex flex-col items-center w-full sm:w-auto">
-                    <label className="text-xs md:text-sm font-semibold mb-1 md:mb-2 text-zink-100">
+                    <label className="text-xs md:text-sm font-semibold mb-1 md:mb-2 text-zinc-100">
                       Array Size
                     </label>
                     <input
@@ -403,7 +403,7 @@ const SortingVizualizer = () => {
                       disabled={isAnimating}
                       className="w-full sm:w-24 md:w-32 accent-lime-400"
                     />
-                    <span className="text-xs mt-1 text-zink-700">
+                    <span className="text-xs mt-1 text-zinc-300">
                       {arraySize} bars
                     </span>
                   </div>
@@ -482,7 +482,7 @@ const SortingVizualizer = () => {
                       ? "bg-purple-600 text-white shadow-lg"
                       : isAnimating
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-stone-950 text-zink-300 border-2 border-purple-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
+                      : "bg-stone-950 text-zinc-300 border-2 border-purple-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
                   }`}
                   onClick={() => handleAlgorithmSelect("merge")}
                   disabled={isAnimating}
@@ -496,7 +496,7 @@ const SortingVizualizer = () => {
                       ? "bg-red-600 text-white shadow-lg"
                       : isAnimating
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-stone-950 text-zink-300 border-2 border-red-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
+                      : "bg-stone-950 text-zinc-300 border-2 border-red-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
                   }`}
                   onClick={() => handleAlgorithmSelect("quick")}
                   disabled={isAnimating}
@@ -510,7 +510,7 @@ const SortingVizualizer = () => {
                       ? "bg-cyan-600 text-white shadow-lg"
                       : isAnimating
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-stone-950 text-zink-300 border-2 border-cyan-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
+                      : "bg-stone-950 text-zinc-300 border-2 border-cyan-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
                   }`}
                   onClick={() => handleAlgorithmSelect("heap")}
                   disabled={isAnimating}
@@ -524,7 +524,7 @@ const SortingVizualizer = () => {
                       ? "bg-orange-600 text-white shadow-lg"
                       : isAnimating
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-stone-950 text-zink-300 border-2 border-orange-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
+                      : "bg-stone-950 text-zinc-300 border-2 border-orange-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
                   }`}
                   onClick={() => handleAlgorithmSelect("bubble")}
                   disabled={isAnimating}
@@ -538,7 +538,7 @@ const SortingVizualizer = () => {
                       ? "bg-teal-600 text-white shadow-lg"
                       : isAnimating
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-stone-950 text-zink-300 border-2 border-teal-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
+                      : "bg-stone-950 text-zinc-300 border-2 border-teal-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
                   }`}
                   onClick={() => handleAlgorithmSelect("insertion")}
                   disabled={isAnimating}
@@ -552,7 +552,7 @@ const SortingVizualizer = () => {
                       ? "bg-emerald-600 text-white shadow-lg"
                       : isAnimating
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-stone-950 text-zink-300 border-2 border-emerald-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
+                      : "bg-stone-950 text-zinc-300 border-2 border-emerald-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
                   }`}
                   onClick={() => handleAlgorithmSelect("selection")}
                   disabled={isAnimating}
@@ -566,7 +566,7 @@ const SortingVizualizer = () => {
                       ? "bg-lime-600 text-white shadow-lg"
                       : isAnimating
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-stone-950 text-zink-300 border-2 border-lime-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
+                      : "bg-stone-950 text-zinc-300 border-2 border-lime-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
                   }`}
                   onClick={() => handleAlgorithmSelect("radix")}
                   disabled={isAnimating}
@@ -580,7 +580,7 @@ const SortingVizualizer = () => {
                       ? "bg-sky-600 text-white shadow-lg"
                       : isAnimating
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-stone-950 text-zink-300 border-2 border-sky-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
+                      : "bg-stone-950 text-zinc-300 border-2 border-sky-600 hover:bg-zinc-100 hover:text-stone-900 shadow-md"
                   }`}
                   onClick={() => handleAlgorithmSelect("shell")}
                   disabled={isAnimating}
@@ -591,7 +591,7 @@ const SortingVizualizer = () => {
 
               {/* Color Legend - Horizontal scroll on mobile */}
               <div className="bg-stone-950 rounded-lg p-3 sm:p-4 mt-4 sm:mt-6">
-                <h3 className="text-sm font-semibold text-zink-200 mb-3 text-center">
+                <h3 className="text-sm font-semibold text-zinc-200 mb-3 text-center">
                   Color Legend
                 </h3>
                 <div className="flex overflow-x-auto pb-2 sm:pb-0 sm:flex-wrap gap-3 sm:gap-4 justify-start sm:justify-center text-sm">
@@ -600,7 +600,7 @@ const SortingVizualizer = () => {
                       className="w-4 h-4 rounded border-2 border-gray-50"
                       style={{ backgroundColor: COLORS.DEFAULT }}
                     ></div>
-                    <span className="text-zink-300 whitespace-nowrap">
+                    <span className="text-zinc-300 whitespace-nowrap">
                       Unsorted
                     </span>
                   </div>
@@ -609,7 +609,7 @@ const SortingVizualizer = () => {
                       className="w-4 h-4 rounded border-2 border-gray-50"
                       style={{ backgroundColor: COLORS.COMPARING }}
                     ></div>
-                    <span className="text-zink-300 whitespace-nowrap">
+                    <span className="text-zinc-300 whitespace-nowrap">
                       Comparing
                     </span>
                   </div>
@@ -618,7 +618,7 @@ const SortingVizualizer = () => {
                       className="w-4 h-4 rounded border-2 border-gray-50"
                       style={{ backgroundColor: COLORS.SELECTED }}
                     ></div>
-                    <span className="text-zink-300 whitespace-nowrap">
+                    <span className="text-zinc-300 whitespace-nowrap">
                       Selected
                     </span>
                   </div>
@@ -627,7 +627,7 @@ const SortingVizualizer = () => {
                       className="w-4 h-4 rounded border-2 border-gray-50"
                       style={{ backgroundColor: COLORS.PIVOT }}
                     ></div>
-                    <span className="text-zink-300 whitespace-nowrap">
+                    <span className="text-zinc-300 whitespace-nowrap">
                       Pivot
                     </span>
                   </div>
@@ -636,7 +636,7 @@ const SortingVizualizer = () => {
                       className="w-4 h-4 rounded border-2 border-gray-50"
                       style={{ backgroundColor: COLORS.SORTED_SUB }}
                     ></div>
-                    <span className="text-zink-300 whitespace-nowrap">
+                    <span className="text-zinc-300 whitespace-nowrap">
                       Sub-array
                     </span>
                   </div>
@@ -645,7 +645,7 @@ const SortingVizualizer = () => {
                       className="w-4 h-4 rounded border-2 border-gray-50"
                       style={{ backgroundColor: COLORS.FINAL_SORTED }}
                     ></div>
-                    <span className="text-zink-300 whitespace-nowrap">
+                    <span className="text-zinc-300 whitespace-nowrap">
                       Sorted
                     </span>
                   </div>
@@ -730,11 +730,11 @@ const SortingVizualizer = () => {
                         : "bg-sky-500"
                     }`}
                   ></div>
-                  <h3 className="text-sm font-semibold text-zink-50">
+                  <h3 className="text-sm font-semibold text-zinc-50">
                     How It Works
                   </h3>
                 </div>
-                <p className="text-zink-150 text-xs sm:text-sm leading-relaxed bg-stone-950 p-3 rounded-lg">
+                <p className="text-zinc-150 text-xs sm:text-sm leading-relaxed bg-stone-950 p-3 rounded-lg">
                   {currentAlgorithm.description}
                 </p>
               </div>
@@ -832,7 +832,7 @@ const SortingVizualizer = () => {
                         : "bg-sky-500"
                     }`}
                   ></div>
-                  <h3 className="text-sm font-semibold text-zink-50">
+                  <h3 className="text-sm font-semibold text-zinc-50">
                     Step-by-Step Example
                   </h3>
                 </div>
@@ -841,7 +841,7 @@ const SortingVizualizer = () => {
                     <div className="flex-shrink-0 mt-0.5">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 text-zink-100"
+                        className="h-4 w-4 text-zinc-100"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -854,7 +854,7 @@ const SortingVizualizer = () => {
                         />
                       </svg>
                     </div>
-                    <p className="text-xs text-zink-150 leading-relaxed ml-2">
+                    <p className="text-xs text-zinc-150 leading-relaxed ml-2">
                       {currentAlgorithm.example}
                     </p>
                   </div>
@@ -933,10 +933,10 @@ const SortingVizualizer = () => {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-xs font-semibold text-zink-50 mb-1">
+                    <h3 className="text-xs font-semibold text-zinc-50 mb-1">
                       Did You Know?
                     </h3>
-                    <p className="text-xs text-zink-150">
+                    <p className="text-xs text-zinc-150">
                       {selectedAlgorithm === "merge" &&
                         "Merge sort was invented by John von Neumann in 1945 and is often used when stability is required!"}
                       {selectedAlgorithm === "quick" &&
@@ -959,8 +959,8 @@ const SortingVizualizer = () => {
               </div>
 
               {/* Algorithm Characteristics */}
-              <div className="mt-4 pt-4 border-t border-zink-100">
-                <h3 className="text-xs font-semibold text-zink-50 mb-2 uppercase tracking-wide">
+              <div className="mt-4 pt-4 border-t border-zinc-100">
+                <h3 className="text-xs font-semibold text-zinc-50 mb-2 uppercase tracking-wide">
                   Characteristics
                 </h3>
                 <div className="grid grid-cols-2 gap-2">
@@ -1004,7 +1004,7 @@ const SortingVizualizer = () => {
                         </svg>
                       )}
                     </div>
-                    <span className="text-xs text-zink-200">Stable</span>
+                    <span className="text-xs text-zinc-200">Stable</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div
@@ -1046,7 +1046,7 @@ const SortingVizualizer = () => {
                         </svg>
                       )}
                     </div>
-                    <span className="text-xs text-zink-200">In-Place</span>
+                    <span className="text-xs text-zinc-200">In-Place</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div
@@ -1092,7 +1092,7 @@ const SortingVizualizer = () => {
                         </svg>
                       )}
                     </div>
-                    <span className="text-xs text-zink-200">
+                    <span className="text-xs text-zinc-200">
                       Guaranteed O(n log n)
                     </span>
                   </div>
@@ -1136,7 +1136,7 @@ const SortingVizualizer = () => {
                         </svg>
                       )}
                     </div>
-                    <span className="text-xs text-zink-200">
+                    <span className="text-xs text-zinc-200">
                       Comparison-free
                     </span>
                   </div>
