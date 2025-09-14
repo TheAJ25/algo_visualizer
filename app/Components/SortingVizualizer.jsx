@@ -17,7 +17,7 @@ const SortingVizualizer = () => {
 
   // Calculate responsive array size based on screen width
   const getResponsiveArraySize = () => {
-    if (typeof window === "undefined") return 180; // Default for SSR
+    if (typeof window === "undefined") return 160; // Default for SSR
 
     const screenWidth = window.innerWidth;
     if (screenWidth < 640) {
